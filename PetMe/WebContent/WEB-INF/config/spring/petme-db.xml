@@ -7,25 +7,27 @@
                             http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
 	<!-- DB settings -->
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/petme" />
 		<property name="username" value="root" />
 		<property name="password" value="root" />
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="testOnBorrow" value="true" />
 	</bean>
 
 	<!-- Hibernate Settings -->
 	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 
-
+		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan" value="com.petme.dao.hibernate" />
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.connection.zeroDateTimeBehavior">convertToNull</prop>
 			</props>
 		</property>
 		<property name="annotatedClasses">
@@ -43,19 +45,14 @@
 	<tx:annotation-driven transaction-manager="hibernateTransactionManager" />
 
 	<bean id="hibernateTransactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<!-- DAO beans -->
-	<bean id="authDao" class="com.sfnt.mvc.dao.hibernate.UserAuthenticationDaoImpl">
-		<property name="sessionFactory" ref="sessionFactory">
-		</property>
-	</bean>
-
+	<!-- <bean id="authDao" class="com.sfnt.mvc.dao.hibernate.UserAuthenticationDaoImpl"> 
+		<property name="sessionFactory" ref="sessionFactory"> </property> </bean> -->
 	<!-- Service beans -->
-	<bean id="authService" class="com.sfnt.mvc.service.AuthenticationService">
-		<property name="authDao" ref="authDao">
-		</property>
-	</bean>
+	<!-- <bean id="authService" class="com.sfnt.mvc.service.AuthenticationService"> 
+		<property name="authDao" ref="authDao"> </property> </bean> -->
 </beans>
