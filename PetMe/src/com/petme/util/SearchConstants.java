@@ -1,5 +1,11 @@
 package com.petme.util;
 
+/**
+ * All Search Related constants to come here.
+ * 
+ * @author Taman Bindra
+ * 
+ */
 public class SearchConstants extends Constants {
 
 	public static enum SEARCH_TYPE {
